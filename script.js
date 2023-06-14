@@ -1,5 +1,5 @@
 let runningSum = 0;
-let buffer = '0';
+let buffer = "0";
 let prevOperator; 
 
 const screen = document.querySelector('.screen'); 
@@ -21,26 +21,68 @@ function checkSymbol(sym) {
         case 'Clear':
             // alert("It reached here")
             runningSum = 0;
-            buffer = '0';
+            buffer = "0";
             break; 
         case 'Del': 
             // alert("It reached here")
             if (buffer.length === 1) {
-                buffer = '0'; 
+                buffer = "0"; 
             } else {
                 buffer = buffer.substring(0, buffer.length - 1);
             }
             break;
-        case '+/-':
+        case '±':
             // alert("It reached here");
             checkNumber(parseInt(buffer));
             break; 
+        case '=':
+            if (prevOperator === null) {
+                return; 
+            }
+            calculate(parseInt(buffer)); 
+            prevOperator = null;
+            buffer = runningSum;
+            runningSum = 0;
         case '+':
-        case '-':
+        case '−':
+        case '×':
+        case '÷':
+            // alert("It reached here");
+            preformOperation(sym); 
         default:
             alert("ERROR!");
             break;
     }
+}
+
+function preformOperation(symbol) {
+    // alert("It reached here");
+    if (buffer === "0") {
+            return; 
+    }
+
+    const num = parseInt(buffer);
+
+    if (runningSum === 0) {
+        runningSum = num; 
+    } else {
+        calculate(num);
+    }
+
+    prevOperator = symbol;
+    buffer = '0'; 
+}
+
+function calculate(number) {
+     if (prevOperator === '+') {
+        runningSum += number;
+     } else if (prevOperator === '−') {
+        runningSum -= number;
+     } else if (prevOperator === '×') {
+        runningSum *= number;
+     } else if (prevOperator === '÷') {
+        runningSum /= number;
+     }
 }
 
 function checkNumber(inputNumber) {
